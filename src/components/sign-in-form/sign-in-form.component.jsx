@@ -22,9 +22,7 @@ const SignInForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleSubmit = async () => {
     try {
       const { user } = await signInAuthUserWithEmailAndPassword(
         email,
@@ -32,7 +30,17 @@ const SignInForm = () => {
       );
       resetFormFields();
     } catch (error) {
-      console.log("Could not login", error.message);
+      switch (error.code) {
+        case "auth/user-not-found":
+          alert("No user associated with this email");
+          break;
+        case "auth/wrong-password":
+          alert("Incorrect password.");
+          break;
+        default:
+          console.log("Could not login", error.message);
+          break;
+      }
     }
   };
 
@@ -70,7 +78,7 @@ const SignInForm = () => {
         />
         <div className="buttons-container">
           <Button type="submit">Sign In</Button>
-          <Button buttonType="google" onClick={signInWithGoogle}>
+          <Button type="button" buttonType="google" onClick={signInWithGoogle}>
             Sign In With Google
           </Button>
         </div>
