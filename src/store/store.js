@@ -7,4 +7,4 @@ const middlewares = [logger];
 
 const composedEnhancers = compose(applyMiddleware(...middlewares));
 
-export const store = createStore(rootReducer, undefined, middlewares);
+export const store = createStore(rootReducer, undefined, composedEnhancers);
