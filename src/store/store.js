@@ -10,7 +10,7 @@ import { persistStore, persistReducer } from "redux-persist";
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["user"], // User value is coming from auth state listener, we can blacklist it
+  whitelist: ["cart"], // User value is coming from auth state listener, we can blacklist it
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
