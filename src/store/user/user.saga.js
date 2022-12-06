@@ -13,8 +13,6 @@ export function* getSnapshotFromUserAuth(userAuth, additionalDetails) {
       userAuth,
       additionalDetails
     );
-    console.log(userSnapshot);
-    console.log(userSnapshot.data());
 
     yield put(signInSuccess({ ...userSnapshot.data(), id: userSnapshot.id }));
   } catch (error) {
