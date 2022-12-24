@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { signInAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
-import { googleSignInStart } from "../../store/user/user.action";
+import { googleSignInStart, emailSignInStart } from "../../store/user/user.action";
 import { SignInContainer, ButtonsContainer } from "./sign-in-form.styles.jsx";
 
 const defaultFormFields = {
@@ -21,23 +20,13 @@ const SignInForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     try {
-      await signInAuthUserWithEmailAndPassword(email, password);
+	  dispatch(emailSignInStart(email, password));
       resetFormFields();
     } catch (error) {
-      switch (error.code) {
-        case "auth/user-not-found":
-          alert("No user associated with this email");
-          break;
-        case "auth/wrong-password":
-          alert("Incorrect password.");
-          break;
-        default:
-          console.log("Could not login", error.message);
-          break;
-      }
+	  console.log('user sign in failed', error);
     }
   };
 
