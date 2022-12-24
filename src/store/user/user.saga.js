@@ -49,5 +49,5 @@ export function* onCheckUserSession() {
 }
 
 export function* userSagas() {
-  yield all([call(onCheckUserSession), call(signInWithGoogle)]);
+  yield all([call(onCheckUserSession), call(onGoogleSignInStart)]);
 }
