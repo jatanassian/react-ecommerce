@@ -15,7 +15,7 @@ export function* getSnapshotFromUserAuth(userAuth, additionalDetails) {
       additionalDetails
     );
 
-    yield put(signInSuccess({ ...userSnapshot.data(), id: userSnapshot.id }));
+    yield put(signInSuccess({ ...userSnapshot.data, id: userSnapshot.id }));
   } catch (error) {
     yield put(signInFailed(error));
   }
