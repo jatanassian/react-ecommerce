@@ -13,7 +13,7 @@ const INITIAL_STATE: CategoriesState = {
   error: null,
 };
 
-export const categoriesReducer = (state = INITIAL_STATE, action = {} as CategoryAction) => {
+export const categoriesReducer = (state = INITIAL_STATE, action = {} as CategoryAction): CategoriesState => {
 
   switch (action.type) {
     case CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_START:
