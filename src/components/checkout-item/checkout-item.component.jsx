@@ -1,11 +1,5 @@
-import { memo } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  addItemToCart,
-  clearItemFromCart,
-  removeItemFromCart,
-} from "../../store/cart/cart.action";
-import { selectCartItems } from "../../store/cart/cart.selector";
+import { useContext } from "react";
+import { CartContext } from "../../contexts/cart.context";
 import {
   CheckoutItemContainer,
   ImageContainer,
@@ -16,15 +10,14 @@ import {
   RemoveButton,
 } from "./checkout-item.styles";
 
-const CheckoutItem = memo(({ cartItem }) => {
+const CheckoutItem = ({ cartItem }) => {
   const { name, imageUrl, price, quantity } = cartItem;
-  const cartItems = useSelector(selectCartItems);
+  const { removeItemFromCart, addItemToCart, clearItemFromCart } =
+    useContext(CartContext);
 
-  const dispatch = useDispatch();
-
-  const addItem = () => dispatch(addItemToCart(cartItems, cartItem));
-  const removeItem = () => dispatch(removeItemFromCart(cartItems, cartItem));
-  const clearItem = () => dispatch(clearItemFromCart(cartItems, cartItem));
+  const addItem = () => addItemToCart(cartItem);
+  const removeItem = () => removeItemFromCart(cartItem);
+  const clearItem = () => clearItemFromCart(cartItem);
 
   return (
     <CheckoutItemContainer>
@@ -42,6 +35,6 @@ const CheckoutItem = memo(({ cartItem }) => {
       <RemoveButton onClick={clearItem}>&#10005;</RemoveButton>
     </CheckoutItemContainer>
   );
-});
+};
 
 export default CheckoutItem;

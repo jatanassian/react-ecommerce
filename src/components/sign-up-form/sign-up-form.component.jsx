@@ -1,11 +1,11 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-import { AuthError, AuthErrorCodes } from "firebase/auth";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+import {
+  createAuthUserWithEmailAndPassword,
+  createUserDocumentFromAuth,
+} from "../../utils/firebase/firebase.utils";
 import { SignUpContainer } from "./sign-up-form.styles";
-import { signUpStart } from "../../store/user/user.action";
-import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 
 const defaultFormFields = {
   displayName: "",
@@ -17,14 +17,13 @@ const defaultFormFields = {
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
-  const dispatch = useDispatch()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
@@ -32,10 +31,15 @@ const SignUpForm = () => {
     }
 
     try {
-      dispatch(signUpStart(email, password, displayName))
+      const { user } = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
-      if ((error as AuthError).code === AuthErrorCodes.EMAIL_EXISTS) {
+      if (error.code === "auth/email-already-in-use") {
         alert("Cannot create user, email already in use");
       } else {
         console.log("Error signing up user", error);
@@ -87,7 +91,7 @@ const SignUpForm = () => {
           value={confirmPassword}
         />
 
-        <Button buttonType={BUTTON_TYPE_CLASSES.inverted} type="submit">
+        <Button buttonType="inverted" type="submit">
           Sign Up
         </Button>
       </form>
